@@ -1,0 +1,55 @@
+You will create the following components for this lab:
+#Amazon EC2 - Web Server
+#Amazon Machine Image (AMI)
+#Auto Scaling Launch Configuration
+#Auto Scaling Group
+#Auto Scaling Policies
+#ELB
+
+Task 1: Create a New Amazon Machine Image for Amazon EC2 Auto Scaling
+=====================================================================
+
+Connect to Command Host
+-----------------------
+chmod 400 labsuser.pem
+ssh -i labsuser.pem ec2-user@<public-ip>
+
+Configure the AWS CLI 
+----------------------
+  curl http://169.254.169.254/latest/dynamic/instance-identity/document | grep region
+
+  aws configure
+
+  cd /home/ec2-user/
+
+Create A New EC2 Instance
+-------------------------
+aws ec2 run-instances --key-name KEYNAME --instance-type t3.micro --image-id AMIID --user-data file:///home/ec2-user/UserData.txt --security-group-ids HTTPACCESS --subnet-id SUBNETID --associate-public-ip-address --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=WebServerBaseImage}]' --output text --query 'Instances[*].InstanceId'
+
+``aws ec2 run-instances --key-name vockey --instance-type t3.micro --image-id ami-07d59d159373b8030 --user-data file:///home/ec2-user/UserData.txt --security-group-ids sg-0a72458291a234aea --subnet-id subnet-0179e9611ad2cfd18 --associate-public-ip-address --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=WebServerBaseImage}]' --output text --query 'Instances[*].InstanceId'``
+ i-0105836d92edd5529
+
+aws ec2 wait instance-running --instance-ids NEW-INSTANCE-ID
+``aws ec2 wait instance-running --instance-ids``
+
+aws ec2 describe-instances --instance-id NEW-INSTANCE-ID --query 'Reservations[0].Instances[0].NetworkInterfaces[0].Association.PublicDnsName'
+``aws ec2 describe-instances --instance-id  i-0105836d92edd5529 --query 'Reservations[0].Instances[0].NetworkInterfaces[0].Association.PublicDnsName'``
+"ec2-35-90-38-194.us-west-2.compute.amazonaws.com"
+
+navigate to --> http://ec2-35-90-38-194.us-west-2.compute.amazonaws.com/index.php
+
+
+Create a Custom AMI
+-------------------
+
+aws ec2 create-image --name WebServer --instance-id NEW-INSTANCE-ID
+``aws ec2 create-image --name WebServer --instance-id i-0105836d92edd5529``
+
+{
+    "ImageId": "ami-0f8bec77d72bcda78"
+}
+
+Task 2: Create an Auto Scaling Environment
+==========================================
+
+webserverloadbalancer-1399604233.us-west-2.elb.amazonaws.com

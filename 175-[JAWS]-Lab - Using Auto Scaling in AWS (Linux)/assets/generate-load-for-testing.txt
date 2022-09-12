@@ -1,0 +1,11 @@
+Generate load for testing your ELB:
+-----------------------------------
+
+Amazon Connect --> In your amazon linux 2 cli:
+*check current utilization of services:
+> top
+> sudo linux-extras install epel
+> sudo yum install stress
+> uptime
+> sudo stress --cpu 8 -v --timeout 3000s
+

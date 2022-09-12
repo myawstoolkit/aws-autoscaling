@@ -1,0 +1,11 @@
+AMIID	        ami-0c43067304fd16596
+HTTPACCESS	  sg-00fb2f2e146945ba1
+COMMANDHOSTIP	35.91.128.0
+KEYNAME	      vockey
+SUBNETID	    subnet-06d63f01dcbff1078
+
+ips -- public:35.91.128.0, private:10.5.10.97
+
+
+ssh -i labsuser.pem ec2-user@35.91.128.0
+
